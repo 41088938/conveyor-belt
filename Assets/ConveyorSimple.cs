@@ -5,22 +5,28 @@ using UnityEngine;
 public class ConveyorSimple : MonoBehaviour
 {
     public float speed;
-    Rigidbody rBody;
+    public Vector3 direction;
+    public List<GameObject> onBelt;
     // Start is called before the first frame update
     void Start()
     {
-        rBody=GetComponent<Rigidbody>();
+       
     }
 
     private void FixedUpdate()
     {
-        Vector3 pos = rBody.position;
-        rBody.position -= transform.right * speed * Time.fixedDeltaTime; //y軸無論是什麼，物體都能沿著傳送帶導軌方向移動
-        rBody.MovePosition(pos);
+    for(int i = 0; i<=onBelt.Count -1;i++)
+            {
+            onBelt[i].GetComponent<Rigidbody>().velocity = speed * direction *Time.deltaTime;
+            
+            }
     }
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        onBelt.Add(collision.gameObject);
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        onBelt.Remove(collision.gameObject);
+    }
 }
